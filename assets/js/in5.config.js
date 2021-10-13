@@ -41,7 +41,7 @@ if(multifile) {
 var isLiquid = (pageMode.indexOf('liquid') != -1), flip = (pageMode.indexOf('flip') != -1) && !multifile;
 var arrowNav = false;
 var lazyLoad = true;
-var scaleMode = 'height_all';
+var scaleMode = 'height_desktop';
 var webAppType = 'mobile';
 var useTracker = false;
 var shareInfo = {btns:[], align:"left"};
@@ -75,7 +75,7 @@ var sliderSettings = {}, nav = {}, in5 = {layouts:[
  		"name": "mobile V",
  		"class": "mq-1080",
  		"width": 1080,
- 		"height": 1920,
+ 		"height": 1849,
  		"default": false,
  		"trigger": 1240,
  		"index": 2
@@ -920,7 +920,7 @@ function getOrientation() {
 }
 
 function addNavProps(){
-	if(nav.numPages === undefined) nav.numPages=180;
+	if(nav.numPages === undefined) nav.numPages=14;
 	nav.rtl = $('#slider').attr('data-dir') == 'rtl';
 	if(nav.rtl) $('html').attr('data-dir', 'rtl');
 	nav.init = function() { setTimeout(function(){nav.to(getStartPage());},1); };
