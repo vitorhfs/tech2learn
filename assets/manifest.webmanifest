@@ -1,13 +1,13 @@
 {
- 	"name": "Revista Digital PUCPR 3",
+ 	"name": "Teck2Learn PUCPR",
  	"start_url": "../index.html?standalone=1",
  	"display": "standalone",
- 	"background_color": "#000",
- 	"description": "Catálogo PUCPR",
+ 	"background_color": "#ededed",
+ 	"description": "PUCPR\nTech2Learn",
  	"icons": [
  		{
  			"src": "images/icon.png",
- 			"sizes": "144x144",
+ 			"sizes": "595.731632014005x842.473017070571",
  			"type": "image/png",
  			"purpose": "any maskable"
  		}
