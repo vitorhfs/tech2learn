@@ -41,8 +41,8 @@ if(multifile) {
 var isLiquid = (pageMode.indexOf('liquid') != -1), flip = (pageMode.indexOf('flip') != -1) && !multifile;
 var arrowNav = false;
 var lazyLoad = true;
-var scaleMode = 'height_desktop';
-var webAppType = '';
+var scaleMode = 'height_all';
+var webAppType = 'mobile';
 var useTracker = false;
 var shareInfo = {btns:[], align:"left"};
 var maxScaleWidth, maxScaleHeight;
@@ -54,31 +54,22 @@ var animationItEvents = 'webkitAnimationIteration oanimationiteration MSAnimatio
 var interactiveSelectors = 'a,button,input,select,textarea,.mejs-overlay-button,map,[onclick],[data-fixed-action],[data-useswipe="1"],[data-tapstart="1"],.panzoom,#viewer-options-wrap';
 var sliderSettings = {}, nav = {}, in5 = {layouts:[
  	{
- 		"name": "A4 V",
- 		"class": "mq-595",
- 		"width": 595,
- 		"height": 842,
- 		"default": false,
- 		"trigger": 725,
- 		"index": 0
- 	},
- 	{
  		"name": "iPad pro V",
  		"class": "mq-1932 mq-default",
  		"width": 1932,
  		"height": 2732,
  		"default": true,
  		"trigger": "default",
- 		"index": 1
+ 		"index": 0
  	},
  	{
  		"name": "mobile V",
  		"class": "mq-1080",
  		"width": 1080,
- 		"height": 1849,
+ 		"height": 1920,
  		"default": false,
  		"trigger": 1240,
- 		"index": 2
+ 		"index": 1
  	}
  ]},
 viewOpts = ({title:0, page:0, zoom:0, fs:0, pdf:0, toc:0, thumbs:0, progress:0, bg:"#000", loadText:"loading content...", footer:0});
@@ -275,10 +266,10 @@ function onNewPage(e, data){
 			data.slider.scrollAdjust();
 			delete data.slider.scrollAdjust;
 		} else if(resetSliderScrollY && sliderSettings.useSlider && $(window).scrollTop()>2){$(window).scrollTop(0);}
-				$('.page [data-hidestart]').addClass('hidden').filter('.mso.slideshow[data-autostart=1]').each(function(ind,elem){
-			toFirstState(elem);/*reset slideshow*/
+		$('.page [data-hidestart]').addClass('hidden').filter('.mso.slideshow[data-autostart=1]').each(function(ind,elem){
+			toFirstState(elem);/*reset slideshow within hidden items*/
 		});
-				if(!data.slider) clearLastPage($('.activePage'));
+		if(!data.slider) clearLastPage($('.activePage'));
 		nav.previousPageIndex = (nav.current||1)-1;
 		nav.current = data.index+1;
 		setStoredPage(nav.current);
@@ -382,6 +373,7 @@ function onNewState(e){
 	var aniLoad = targState.attr('data-ani-load');
 	if(aniLoad && aniLoad.length) eval(aniLoad);
 		targState.find('[data-autostart="1"]').each(function(i,el){toFirstState(el); startSlideShowDelayed(el); });
+	targState.find('img[src$=".gif"]').each(function(i,e){ var $g=$(e); $g.attr("src",$g.attr('src')); });
 	$otherStates = targState.siblings('.state');
 	$otherStates.find('[data-hidestart]').addClass('hidden');
 	if(targState.parents('.activePage').length) { stopIframe($otherStates); }
@@ -521,6 +513,7 @@ function initWebApp(){
 			$('#share-wrap').hide();
 			if(window.stop && !$('html').is('[manifest]')/*does not have app cache*/){
 				window.stop();
+				$('#loadIndicator, #page-nav').hide();
 				$('body').addClass('loaded');
 			}
 			if(uAgent.indexOf('crios/')>-1){
@@ -920,7 +913,7 @@ function getOrientation() {
 }
 
 function addNavProps(){
-	if(nav.numPages === undefined) nav.numPages=14;
+	if(nav.numPages === undefined) nav.numPages=180;
 	nav.rtl = $('#slider').attr('data-dir') == 'rtl';
 	if(nav.rtl) $('html').attr('data-dir', 'rtl');
 	nav.init = function() { setTimeout(function(){nav.to(getStartPage());},1); };
@@ -945,6 +938,7 @@ function addNavProps(){
 		} else { $('nav#page-nav').hide(); }
 	};
 	nav.build = function(){ nav.next(); };
+	nav.nextSlide = function(doLoop){ if(doLoop || (nav.current<nav.numPages)){nav.next();} };
 	$('nav#page-nav #nextBtn').on(clickEv, function(){ nav.next(); return !1; });
 	$('nav#page-nav #backBtn').on(clickEv, function(){ nav.back(); return !1; });
 	setTimeout(function(){nav.update(getStartPage());},50); /*ensures show() works*/
